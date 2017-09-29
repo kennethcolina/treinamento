@@ -1,0 +1,35 @@
+# --- !Ups
+CREATE SCHEMA kenneth;
+
+CREATE TABLE kenneth.usuario(
+	id VARCHAR(40) NOT NULL UNIQUE,
+	email VARCHAR(100) NOT NULL,
+	senha VARCHAR(16) NOT NULL,
+	CONSTRAINT pk_usuario PRIMARY KEY (id)
+);
+
+CREATE TABLE kenneth.produto(
+	id VARCHAR(40) NOT NULL UNIQUE,
+	nome VARCHAR(40) NOT NULL,
+	descricao VARCHAR(150) NOT NULL,
+	valor DECIMAL(7,2) NOT NULL,
+	imagem_url VARCHAR(200) NOT NULL,
+	usuario_id VARCHAR(40) NOT NULL,
+	CONSTRAINT pk_produto PRIMARY KEY (id),
+  	CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES kenneth.usuario (id)  MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE kenneth.comentario(
+	id SERIAL NOT NULL UNIQUE,
+	texto VARCHAR(150) NOT NULL,
+	produto_id VARCHAR(40) NOT NULL,
+	autor_id VARCHAR(40) NOT NULL,
+	
+	CONSTRAINT pk_comentario PRIMARY KEY (id),
+  	CONSTRAINT fk_usuario FOREIGN KEY (autor_id) REFERENCES kenneth.usuario (id)  MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE,
+  	CONSTRAINT fk_produto FOREIGN KEY (produto_id) REFERENCES kenneth.produto (id)  MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE
+);
+
+# --- !Downs
+
+DROP SCHEMA kenneth CASCADE;
